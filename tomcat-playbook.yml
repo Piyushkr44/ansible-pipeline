@@ -60,8 +60,5 @@
     - name: Deamon reload.
       command: systemctl daemon-reload
 
-    - name: start and enable tomcat_
-      service:
-        daemon_reload: yes
-        name: tomcat 
-        state: started
+    - name: Starting Apache Tomcat service.
+      service: name=tomcat state=started
