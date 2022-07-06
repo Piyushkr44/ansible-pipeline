@@ -46,15 +46,22 @@
         remote_src: yes 
         extra_opts: [--strip-components=1]
         creates: /usr/share/tomcat/bin 
-    - name: copy tomcat service 
-      template:
-        src: templates/tomcat.service.j2
+    - name: Creating service for Apache tomcat.
+      file:
+        path: /etc/systemd/system/tomcat.service
+        state: touch
+        mode: u+rwx,g-rwx,o-x
+
+    - name: download foo.conf
+      get_url:
+        url: https://raw.githubusercontent.com/aftab70/Apache_Tomcat/master/tomcat_services
         dest: /etc/systemd/system/tomcat.service
-      when: ansible_service_mgr == 'systemd'
+ 
+    - name: Deamon reload.
+      command: systemctl daemon-reload
+
     - name: start and enable tomcat_
       service:
         daemon_reload: yes
         name: tomcat 
-        state: started 
-        enabled: yes
-      when: ansible_service_mgr == 'systemd'
+        state: started
